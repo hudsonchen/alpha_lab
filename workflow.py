@@ -1,13 +1,12 @@
 from pathlib import Path
 from typing import List, Dict
 
-from openai import OpenAI
 from agent import Agent
 from run_meeting import run_meeting
 from utils import *
 
 
-def run_workflow(client: OpenAI, task: str, agents: Dict[str, Agent]) -> List[StepResult]:
+def run_workflow(task: str, agents: Dict[str, Agent]) -> List[StepResult]:
     """
     4-step research workflow:
     (1) Strategy (research direction)
@@ -26,7 +25,6 @@ def run_workflow(client: OpenAI, task: str, agents: Dict[str, Agent]) -> List[St
         agenda=task,
         save_dir=meetings_dir,
         save_name="01_strategy",
-        client=client,
         team_lead=agents["strategist"],
         team_members=(agents["tactician"], agents["writer"], agents["critic"]),
         agenda_questions=(
@@ -48,7 +46,6 @@ def run_workflow(client: OpenAI, task: str, agents: Dict[str, Agent]) -> List[St
         agenda=task,
         save_dir=meetings_dir,
         save_name="02_tactics",
-        client=client,
         team_lead=agents["tactician"],
         team_members=(agents["strategist"], agents["writer"], agents["critic"]),
         summaries=(strategy,),
@@ -71,7 +68,6 @@ def run_workflow(client: OpenAI, task: str, agents: Dict[str, Agent]) -> List[St
         agenda=task,
         save_dir=meetings_dir,
         save_name="03_draft",
-        client=client,
         team_lead=agents["writer"],
         team_members=(agents["strategist"], agents["tactician"], agents["critic"]),
         summaries=(strategy, tactics),
@@ -94,7 +90,6 @@ def run_workflow(client: OpenAI, task: str, agents: Dict[str, Agent]) -> List[St
         agenda=task,
         save_dir=meetings_dir,
         save_name="04_critic_and_revise",
-        client=client,
         team_lead=agents["critic"],
         team_members=(agents["strategist"], agents["tactician"], agents["writer"]),
         summaries=(strategy, tactics, draft),

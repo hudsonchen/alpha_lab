@@ -1,21 +1,12 @@
 from __future__ import annotations
 
-import os
-from dataclasses import dataclass
-from typing import List, Dict, Any
+from typing import Dict
 
-from openai import OpenAI
-from openai.types.chat import ChatCompletionMessageParam
 from agent import Agent
 from utils import *
 from workflow import *
 
 def main() -> None:
-    client = OpenAI(
-        api_key=os.environ["OPENAI_API_KEY"],
-        base_url="https://api.shubiaobiao.cn/v1",
-    )
-
     # Define agents (you can add more, or swap models per-agent)
     agents: Dict[str, Agent] = {
         "strategist": Agent(
@@ -55,7 +46,7 @@ def main() -> None:
         "and outline concrete steps for developing and evaluating these models."
     )
 
-    results = run_workflow(client, task, agents)
+    results = run_workflow(task, agents)
     save_results(task, results, output_path="./results/workflow_results.txt")
 
 
